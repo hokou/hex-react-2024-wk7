@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef, use } from "react"
+import { useState, useEffect, useRef } from "react"
 import axios from "axios"
 import { Modal } from "bootstrap";
+import { useDispatch } from "react-redux";
+import { pushMessage } from "../redux/toastSlice";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -36,6 +38,8 @@ function ProductModal({
     }
   }, [isOpen]);
 
+  const dispatch = useDispatch();
+
   const createProduct = async () => {
     try {
       await axios.post(`${BASE_URL}/v2/api/${API_PATH}/admin/product`, {
@@ -46,8 +50,18 @@ function ProductModal({
           is_enabled: modalData.is_enabled ? 1 : 0,
         }
       });
+      dispatch(pushMessage({
+        text: "新增產品成功",
+        status: "success",
+      }));
     } catch (error) {
-      alert("新增產品失敗");
+      // alert("新增產品失敗");
+      const { message } = error.response.data;
+
+      dispatch(pushMessage({
+        text: message.join(", "),
+        status: "failed",
+      }));
       console.error(error);
     }
   };
@@ -62,8 +76,18 @@ function ProductModal({
           is_enabled: modalData.is_enabled ? 1 : 0,
         }
       });
+      dispatch(pushMessage({
+        text: "編輯產品成功",
+        status: "success",
+      }));
     } catch (error) {
-      alert("編輯產品失敗");
+      // alert("編輯產品失敗");
+      const { message } = error.response.data;
+
+      dispatch(pushMessage({
+        text: message.join(", "),
+        status: "failed",
+      }));
       console.error(error);
     }
   };
