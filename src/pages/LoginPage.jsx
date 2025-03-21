@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
+import PropTypes from 'prop-types';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -73,5 +74,8 @@ function LoginPage({setIsAuth}) {
     </div>
   );
 }
+LoginPage.propTypes = {
+  setIsAuth: PropTypes.func.isRequired,
+};
 
 export default LoginPage

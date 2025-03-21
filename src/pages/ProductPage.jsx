@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import axios from "axios"
+import PropTypes from "prop-types";
 
 import Pagination from "../components/Pagination";
 import ProductModal from "../components/ProductModal";
@@ -23,7 +24,7 @@ const defaultModalState = {
 };
 
 
-function ProductPage() {
+function ProductPage({setIsAuth}) {
 
   const [pageInfo, setPageInfo] = useState({});
 
@@ -80,10 +81,30 @@ function ProductPage() {
     setIsDelProductModalOpen(true);
   };
 
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/v2/logout`
+      );
+      alert(res.data.message);
+      setIsAuth(false);
+    } catch (error) {
+      alert("登出失敗");
+      console.error(error);
+    }
+  };
+
 
   return (
     <>
       <div className="container py-5">
+        <div className="row mb-3">
+          <div className="d-flex justify-content-end">
+            <button onClick={handleLogout} type="button" className="btn btn-secondary">
+              登出
+            </button>
+          </div>
+        </div>
         <div className="row">
           <div className="col">
             <div className="d-flex justify-content-between">
@@ -138,5 +159,8 @@ function ProductPage() {
     </>
   );
 }
+ProductPage.propTypes = {
+  setIsAuth: PropTypes.func.isRequired,
+};
 
 export default ProductPage;
